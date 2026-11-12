@@ -1,0 +1,174 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Studio"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.png"><title>Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#000;--c:#1c1c1e;--c2:#2c2c2e;--s:#8e8e93;--a:#8b6cff;--g:#32d74b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+body{margin:0;background:var(--bg);color:#fff;font:17px/1.3 -apple-system,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 calc(92px + env(safe-area-inset-bottom))}
+main{max-width:560px;margin:auto;padding:12px 16px}
+h1{font-size:34px;line-height:1.1;margin:12px 0 4px;letter-spacing:-.5px}
+.sub{color:var(--s);font-size:15px;margin:0 0 14px}
+h3{font-size:13px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;margin:22px 4px 8px}
+.card{background:var(--c);border-radius:16px;padding:16px;margin:0 0 12px}
+.row{display:flex;align-items:center;gap:12px}.col{flex:1;min-width:0}
+.t{font-weight:600}.m{color:var(--s);font-size:15px}
+.bar{width:5px;align-self:stretch;min-height:36px;border-radius:3px;flex:none}
+button{-webkit-appearance:none;appearance:none;font:600 16px/1 -apple-system,system-ui,sans-serif;min-height:44px;border:0;border-radius:12px;padding:0 16px;background:var(--c2);color:#fff;cursor:pointer}
+button.p{background:var(--a)}button.ok{background:#32d74b26;color:var(--g)}button.w{width:100%;margin:0 0 12px}
+.btns{display:flex;gap:8px;margin-top:12px}.btns button{flex:1;padding:0 8px}
+.seg{display:flex;flex-wrap:wrap;background:var(--c2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1 1 40%;min-height:36px;background:none;font-size:15px;padding:0 8px}.seg button.on{background:#636366}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.chips span{background:var(--c);border-radius:20px;padding:6px 12px;font-size:13px;color:var(--s)}
+.prog{height:6px;background:var(--c2);border-radius:3px;margin:0 0 14px;overflow:hidden}.prog i{display:block;height:100%;background:var(--a)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1c1c1ee8;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:.5px solid #3a3a3c;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;min-height:50px;padding:0;font-size:11px;font-weight:500;color:var(--s)}nav button.on{color:var(--a)}
+nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+input,textarea{width:100%;font:16px ui-monospace,monospace;background:var(--c2);color:#fff;border:0;border-radius:12px;padding:12px}
+.ring{display:block;margin:8px auto 20px;width:260px;height:260px}pre{white-space:pre-wrap}
+</style></head><body><main id="v"></main><nav id="n"></nav>
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0'),NT='https://ntfy.sh/',KEY='studio1';
+const dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const tm=t=>{const q=t.split(':');return q[0]*60+ +q[1]},hm=m=>pad(m/60|0)+':'+pad(m%60);
+const mk=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return dk(x)};
+const GG=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+// Configurazione di partenza (modificabile da Impostazioni). win: 0=Dom..6=Sab -> finestre [da,a,leggero?]
+const DEF={max:3,
+ courses:[{id:'fis',n:'Fisica',t:4.5,st:'a',col:'#ff9f0a'},{id:'mat',n:'Matematica',t:4.5,st:'a',col:'#0a84ff'},{id:'pro',n:'Programmazione 1',t:4,st:'a',col:'#30d158'},{id:'mii',n:'MII',t:2,st:'p',col:'#bf5af2'}],
+ win:{1:[['17:00','21:00']],2:[['16:00','18:00']],3:[['16:00','18:00',1]],4:[['15:30','18:00']],5:[['15:00','19:00']],0:[['15:00','18:00']],6:[]},
+ gym:{2:['18:00','20:30'],4:['18:30','20:30']},
+ les:{1:'9–14',2:'9–14',3:'11–13 e 14–16',4:'9–13',5:'9–13'},
+ exams:[{c:'mii',d:'2027-01-11'},{c:'mat',d:'2027-06-17'},{c:'fis',d:'2027-06-18'}]};
+let S;try{S=JSON.parse(localStorage[KEY])}catch(e){}
+S=S||{done:[],skip:{},off:{},rev:[],sent:{},cal:{t:0,ev:[]},lvl:2,mode:[50,10],topic:'studio-'+Math.random().toString(36).slice(2,12)};
+S.cfg=Object.assign({},DEF,S.cfg);S.log=S.log||[];
+const save=()=>{try{localStorage[KEY]=JSON.stringify(S)}catch(e){}};
+if(S.v!=2){Object.keys(S.sent||{}).forEach(q=>fetch(NT+S.topic+'/'+q,{method:'DELETE'}).catch(()=>0));S.sent={};S.v=2}
+save();
+const log=m=>{S.log.unshift(new Date().toLocaleTimeString('it',{hour:'2-digit',minute:'2-digit'})+' '+m);S.log.length=Math.min(S.log.length,8);save()};
+addEventListener('error',e=>log('JS: '+e.message));
+const C=id=>S.cfg.courses.find(c=>c.id==id)||{n:id,col:'#888',st:'p'};
+const lab=b=>C(b.c).st=='a'?(b.l?'Appunti in bella (leggero)':'Appunti in bella + audio'):(b.l?'Ripasso leggero':'Esercizi + ripasso');
+const ex=id=>S.cfg.exams.some(e=>e.c==id&&new Date(e.d)>Date.now()&&new Date(e.d)-Date.now()<35*864e5);
+
+// Pianificatore: slot da 60' (50 focus + 10 pausa) nelle finestre libere, assegnati ai corsi più "in debito"
+function plan(){
+ const now=new Date(),nm=now.getHours()*60+now.getMinutes(),cut=+now-7*864e5,d7={},al={},out=[],mx=S.cfg.max||3;
+ S.done.forEach(x=>{if(+new Date(x.d)>=cut)d7[x.c]=(d7[x.c]||0)+x.m/60});
+ for(let i=0;i<10;i++){
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i),k=dk(d),dw=d.getDay(),b=[],used={};
+  if(!S.off[k]){
+   const bz=S.cal.ev.map(e=>[e[0]-d/6e4,e[1]-d/6e4]).filter(e=>e[1]>0&&e[0]<1440),g=S.cfg.gym[dw];
+   if(g)bz.push([tm(g[0]),tm(g[1])]);
+   (S.cfg.win[dw]||[]).forEach(w=>{
+    let sg=[[tm(w[0]),tm(w[1])]];
+    bz.forEach(e=>{sg=sg.flatMap(q=>e[1]<=q[0]||e[0]>=q[1]?[q]:[[q[0],Math.max(q[0],e[0])],[Math.min(q[1],e[1]),q[1]]].filter(r=>r[1]>r[0]))});
+    sg.forEach(q=>{for(let a=q[0];q[1]-a>=50&&b.length<mx;a+=60){
+     const key=k+' '+hm(a);if(S.skip[key]||(!i&&a<nm-10))continue;
+     const need=c=>c.t*(ex(c.id)?1.5:1)*(1+i/7)-(d7[c.id]||0)-(al[c.id]||0)-(used[c.id]?1.2:0);
+     const c=S.cfg.courses.reduce((p,q)=>need(q)>need(p)?q:p);
+     al[c.id]=(al[c.id]||0)+1;used[c.id]=1;b.push({k:key,s:hm(a),e:hm(Math.min(a+60,q[1])),c:c.id,l:w[2]?1:0})}})})}
+  out.push({k,d,b})}
+ return out}
+
+function fin(k,s,c,m){const d=(k||dk(new Date())).split(' ')[0];if(k)S.skip[k]=1;S.done.push({d,s,c,m});[1,3,7].forEach(n=>S.rev.push({d:mk(d,n),c}));upd()}
+const cp=t=>navigator.clipboard.writeText(t).then(()=>alert('Copiato'),()=>alert('Copia non riuscita'));
+function upd(){save();R();nsync();pubPlan()}
+let tab='o',F=S.f||null,TI,busy=0,again=0,ph='';
+
+// UI: stessi componenti ovunque (titolo, sezioni, card, bottoni 44px, segmenti)
+const da=o=>Object.keys(o).map(k=>`data-${k}="${o[k]}"`).join(' ');
+const btn=(a,l,o,cl)=>`<button class="${cl||''}" data-a="${a}" ${da(o||{})}>${l}</button>`;
+const H=(t,s)=>`<h1>${t}</h1><p class="sub">${s}</p>`,sec=t=>`<h3>${t}</h3>`;
+const card=b=>`<div class="card"><div class="row"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${lab(b)}</div></div></div><div class="btns">${btn('stF','Inizia',{c:b.c,k:b.k},'p')}${btn('fin','Fatto',{k:b.k,s:b.s,c:b.c},'ok')}${btn('sk','Non posso',{k:b.k})}</div></div>`;
+function vO(){
+ const P=plan(),t=P[0],n=new Date(),g={};
+ t.b.forEach(b=>g[b.c]=(g[b.c]||0)+1);
+ const sm=Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + '),dn=S.done.filter(x=>x.d==t.k),rv=S.rev.map((r,i)=>({d:r.d,c:r.c,i})).filter(r=>r.d<=t.k);
+ const nx=S.cfg.exams.filter(e=>new Date(e.d)>n).sort((a,b)=>a.d<b.d?-1:1)[0],ls=S.cfg.les&&S.cfg.les[n.getDay()],tot=dn.length+t.b.length;
+ return H(GG[n.getDay()],S.off[t.k]?'Oggi non sei disponibile':sm?'Oggi almeno '+sm:'Oggi sei libero')
+ +`<div class="chips">${ls?`<span>Lezioni ${ls}</span>`:''}${nx?`<span>${C(nx.c).n} tra ${Math.ceil((new Date(nx.d)-n)/864e5)} gg</span>`:''}</div>`
+ +(tot?`<div class="prog"><i style="width:${Math.round(dn.length/tot*100)}%"></i></div>`:'')
+ +t.b.map(card).join('')
+ +btn('off',S.off[t.k]?'Torno disponibile':'Oggi non posso',{k:t.k,v:S.off[t.k]?0:1},'w')
+ +(rv.length?sec('Ripassi da 15 min')+rv.map(r=>`<div class="card row"><i class="bar" style="background:${C(r.c).col}"></i><div class="col t">${C(r.c).n}</div>${btn('rd','✓',{i:r.i},'ok')}</div>`).join(''):'')
+ +(dn.length?sec('Fatto oggi')+`<div class="card">${dn.map(x=>`<div class="m">✓ ${C(x.c).n} · ${x.m} min</div>`).join('')}</div>`:'')}
+function vW(){return H('Settimana','Il piano dei prossimi 7 giorni')+plan().slice(0,7).map(d=>`<div class="card"><div class="row"><div class="col t">${GG[d.d.getDay()]} ${d.d.getDate()}</div>${S.off[d.k]?btn('off','Riattiva',{k:d.k,v:0}):''}</div>${d.b.length?d.b.map(b=>`<div class="row" style="margin-top:10px"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${lab(b)}</div></div></div>`).join(''):`<div class="m" style="margin-top:6px">${S.off[d.k]?'Non disponibile':'Libero'}</div>`}</div>`).join('')}
+function vF(){
+ if(F)return H(C(F.c).n,(F.ph?'Pausa':'Focus')+' · '+F.m[0]+'/'+F.m[1])
+  +`<svg class="ring" viewBox="0 0 260 260"><circle cx="130" cy="130" r="110" fill="none" stroke="#2c2c2e" stroke-width="12"/><circle id="rg" cx="130" cy="130" r="110" fill="none" stroke="${F.ph?'#32d74b':'#8b6cff'}" stroke-width="12" stroke-linecap="round" stroke-dasharray="691" stroke-dashoffset="0" transform="rotate(-90 130 130)"/><text id="tt" x="130" y="148" text-anchor="middle" font-size="58" font-weight="300" fill="#fff" font-family="-apple-system,system-ui,sans-serif">--:--</text></svg>`
+  +btn('end','Termina e salva',{},'w p');
+ const fc=S.fc||S.cfg.courses[0].id,md=S.mode[0];
+ return H('Focus','Un blocco = focus + pausa. Gli avvisi di fine fase arrivano da ntfy anche a schermo spento.')
+  +sec('Materia')+`<div class="card"><div class="seg">${S.cfg.courses.map(c=>btn('fc',c.n,{c:c.id},c.id==fc?'on':'')).join('')}</div></div>`
+  +sec('Durata')+`<div class="card"><div class="seg">${btn('md','50 / 10',{v:50},md==50?'on':'')}${btn('md','25 / 5',{v:25},md==25?'on':'')}</div></div>`
+  +btn('stF','Inizia',{c:fc,k:''},'w p')}
+function vS(){
+ return H('Impostazioni','Notifiche, calendario e widget')
+ +sec('Notifiche (ntfy)')+`<div class="card"><div class="m">Nell'app ntfy iscriviti a questo topic</div><input data-c="topic" value="${S.topic}" style="margin:8px 0 12px"><div class="seg">${['Spente','Leggero','Medio-pesante','Pesante'].map((x,i)=>btn('lvl',x,{v:i},S.lvl==i?'on':'')).join('')}</div><div class="btns">${btn('tst','Prova ora',{v:0})}${btn('tst','Prova tra 15 s',{v:15})}</div><div class="m" style="margin-top:12px">Programmate: ${Object.keys(S.sent).length}</div></div>`
+ +sec('Calendario e widget')+`<div class="card"><div class="m">Calendario aggiornato: ${S.cal.t?new Date(S.cal.t).toLocaleString('it'):'mai'} · ${S.cal.ev.length} impegni</div><div class="btns">${btn('cal','Aggiorna')}${btn('scr','Copia script')}</div><div class="m" style="margin-top:12px">1. In Scriptable: + → incolla → rinomina «Studio» → ▶ (consenti il calendario).<br>2. Home: tieni premuto → + → Scriptable → medio.<br>3. Tocca il widget → Script: Studio.</div></div>`
+ +sec('Diagnostica')+`<div class="card m" style="font:13px ui-monospace,monospace">${S.log.join('<br>')||'Nessun errore'}</div>`
+ +sec('Configurazione')+`<div class="card"><textarea id="cf" rows="10">${JSON.stringify(S.cfg,null,1)}</textarea><div class="btns">${btn('cfg','Salva',{},'p')}${btn('bak','Backup')}${btn('rs','Ripristina')}</div></div>`}
+const TABS=[['o','Oggi','<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>'],['w','Settimana','<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'],['f','Focus','<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 3h5"/>'],['s','Impostazioni','<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>']];
+function R(){try{$('#v').innerHTML={o:vO,w:vW,f:vF,s:vS}[tab]()}catch(e){$('#v').innerHTML='<pre class="m">'+e.stack+'</pre>'}
+ $('#n').innerHTML=TABS.map(x=>`<button class="${x[0]==tab?'on':''}" data-a="go" data-t="${x[0]}"><svg viewBox="0 0 24 24">${x[2]}</svg>${x[1]}</button>`).join('');paint()}
+function paint(){if(!F)return;const r=Math.max(0,F.end-Date.now()),t=$('#tt'),g=$('#rg');if(t)t.textContent=pad(Math.floor(r/6e4))+':'+pad(Math.floor(r/1e3)%60);if(g)g.setAttribute('stroke-dashoffset',691*(1-r/(F.m[F.ph]*6e4)))}
+
+// Focus timer: le fasi successive sono programmate su ntfy (suonano anche con l'app chiusa)
+async function stF(c,k){const m=S.mode;(F&&F.ids||[]).forEach(dele);F={c,k,m,ph:0,end:Date.now()+m[0]*6e4,acc:0,ids:[]};S.f=F;save();tab='f';R();tk();
+ const me=F;for(let n=0;n<3;n++){const t=me.end+n*(m[0]+m[1])*6e4;
+  for(const x of [['Pausa','Stacca '+m[1]+' minuti.',t],['Si riparte',C(c).n+': altro blocco da '+m[0]+' minuti.',t+m[1]*6e4]]){if(F!==me)return;const id=await pub(x[0],x[1],x[2],4);if(id){if(F===me)me.ids.push(id);else dele(id)}}}S.f=F;save()}
+function tk(){clearInterval(TI);if(!F)return;TI=setInterval(()=>{if(!F)return clearInterval(TI);
+ if(F.end<=Date.now()){bp();if(F.ph){F.ph=0;F.end=Date.now()+F.m[0]*6e4}else{F.acc+=F.m[0];F.ph=1;F.end=Date.now()+F.m[1]*6e4}S.f=F;save();R()}paint()},1000);
+ if(navigator.wakeLock)navigator.wakeLock.request('screen').catch(()=>0)}
+function endF(){clearInterval(TI);const r=F.end-Date.now(),m=F.acc+(F.ph?0:Math.max(0,F.m[0]-Math.ceil(r/6e4))),c=F.c,k=F.k,ids=(F.ids||[]).slice();F=null;S.f=null;ids.forEach(dele);tab='o';m>0?fin(k,'',c,m):upd()}
+function bp(){try{const a=new AudioContext(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=880;o.start();o.stop(a.currentTime+.4)}catch(e){}}
+
+// ntfy: programma gli avvisi (max 3 giorni avanti) e li riallinea al piano; annulla quelli superati
+async function pub(t,m,ts,p){try{const q={title:t,priority:p||4,tags:'books'};if(ts)q.delay=Math.floor(ts/1e3);
+ const r=await fetch(NT+S.topic+'?'+new URLSearchParams(q),{method:'POST',body:m});
+ if(!r.ok){log('ntfy errore '+r.status);return 0}return(await r.json()).id||'x'}catch(e){log('ntfy: '+e.message);return 0}}
+const dele=id=>fetch(NT+S.topic+'/'+id,{method:'DELETE'}).catch(()=>0);
+async function tst(s){const id=await pub('Prova','Se leggi questo, ntfy funziona.',s?Date.now()+s*1e3:0,4);alert(id?(s?'Programmata tra '+s+' secondi':'Inviata ora'):'Non riuscita: '+S.log[0]);R()}
+const hs=w=>w.t+w.m+w.ts;
+async function nsync(){if(busy){again=1;return}busy=1;try{
+ const now=Date.now(),W=new Map(),O=[[],[-10],[-10,0,10,25],[-10,0,5,10,15,20,30]][S.lvl||0];
+ if(S.lvl)plan().slice(0,4).forEach(d=>{const g={};
+  d.b.forEach(b=>{g[b.c]=(g[b.c]||0)+1;const st=+new Date(d.k+'T'+b.s);
+   O.forEach(o=>W.set('b'+b.k.replace(/\W/g,'')+(o<0?'m':'p')+Math.abs(o),{ts:st+o*6e4,t:(o<0?'Tra 10 min':o?'Sei partito?':'Ora')+' · studio '+b.s,m:o<0?'Preparati: tra 10 minuti inizia il blocco.':o?'Parti adesso, anche solo 10 minuti.':'Apri Studio e premi Inizia.',p:o>=15?5:4}))});
+  W.set('am'+d.k.replace(/-/g,''),{ts:+d.d+8*36e5,t:GG[d.d.getDay()]+': studio',m:Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + ')||'Giorno libero',p:3})});
+ for(const q of Object.keys(S.sent)){const o=S.sent[q];if(!W.has(q)||o.h!=hs(W.get(q))){if(o.ts>now+5e3)await dele(o.id);delete S.sent[q]}}
+ for(const [q,w] of W){if(S.sent[q]||w.ts-now<15e3||w.ts-now>71*36e5)continue;const id=await pub(w.t,w.m,w.ts,w.p);if(id)S.sent[q]={id,ts:w.ts,h:hs(w)}}
+ save()}catch(e){log('sync: '+e.message)}busy=0;if(again){again=0;nsync()}}
+
+// Calendario Apple -> (Scriptable) -> ntfy -> app. Piano -> ntfy -> widget.
+async function lc(){try{const L=(await(await fetch(NT+S.topic+'-cal/json?poll=1&since=12h')).text()).trim().split('\n').filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x.event=='message');
+ if(L.length){const m=L[L.length-1];S.cal={t:m.time*1e3,ev:JSON.parse(m.message).ev};save()}}catch(e){log('calendario: '+e.message)}}
+async function pubPlan(){const j=JSON.stringify({p:plan().slice(0,7).map(d=>[d.k,d.b.map(b=>[b.s,b.e,C(b.c).n,C(b.c).col])])});if(j==ph)return;ph=j;try{const r=await fetch(NT+S.topic+'-plan',{method:'POST',body:j});if(!r.ok)log('piano errore '+r.status)}catch(e){log('piano: '+e.message)}}
+const wsc=()=>`// Studio · widget + sync calendario
+const B="${NT}${S.topic}",fm=FileManager.local(),D=fm.documentsDirectory(),f=fm.joinPath(D,"studio.json"),g=fm.joinPath(D,"studio-cal.txt"),st=[];
+try{const cs=await Calendar.forEvents(),a=new Date,e=(await CalendarEvent.between(a,new Date(+a+14*864e5),cs)).filter(x=>!x.isAllDay).slice(0,150).map(x=>[Math.floor(x.startDate/6e4),Math.floor(x.endDate/6e4)]),j=JSON.stringify({ev:e}),o=fm.fileExists(g)?fm.readString(g):"|",i=o.indexOf("|");
+if(o.slice(i+1)!=j||Date.now()-+o.slice(0,i)>216e5){const r=new Request(B+"-cal");r.method="POST";r.body=j;await r.loadString();fm.writeString(g,Date.now()+"|"+j);st.push("calendario inviato ("+e.length+")")}else st.push("calendario ok ("+e.length+")")}catch(x){st.push("calendario: "+x.message)}
+let P=[];try{const L=(await new Request(B+"-plan/json?poll=1&since=12h").loadString()).trim().split("\\n").filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x.event=="message");P=JSON.parse(L.pop().message).p;fm.writeString(f,JSON.stringify(P));st.push("piano ok")}catch(x){try{P=JSON.parse(fm.readString(f));st.push("piano salvato")}catch(y){st.push("piano: apri l'app Studio")}}
+const n=new Date,K=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"),d=(P.find(x=>x[0]==K)||[K,[]])[1];
+const w=new ListWidget;w.backgroundColor=new Color("#1c1c1e");w.refreshAfterDate=new Date(Date.now()+9e5);
+const h=w.addText("Studio oggi");h.font=Font.boldSystemFont(15);h.textColor=Color.white();w.addSpacer(6);
+if(!d.length){const t=w.addText("Libero");t.font=Font.systemFont(13);t.textColor=Color.gray()}
+d.slice(0,4).forEach(b=>{const t=w.addText(b[0]+" "+b[2]);t.font=Font.systemFont(13);t.textColor=new Color(b[3])});
+w.addSpacer();const z=w.addText(st.join(" · "));z.font=Font.systemFont(9);z.textColor=Color.gray();
+config.runsInWidget?Script.setWidget(w):w.presentMedium();Script.complete()`;
+
+// Eventi: un solo ascoltatore per tutti i bottoni (niente handler inline)
+const A={go:d=>{tab=d.t;R()},stF:d=>stF(d.c,d.k),fin:d=>fin(d.k,d.s,d.c,60),sk:d=>{S.skip[d.k]=1;upd()},
+ off:d=>{d.v=='1'?S.off[d.k]=1:delete S.off[d.k];upd()},rd:d=>{S.rev.splice(+d.i,1);upd()},
+ fc:d=>{S.fc=d.c;R()},md:d=>{S.mode=+d.v==25?[25,5]:[50,10];save();R()},lvl:d=>{S.lvl=+d.v;upd()},tst:d=>tst(+d.v),
+ cal:()=>lc().then(R),scr:()=>cp(wsc()),end:()=>endF(),bak:()=>cp(JSON.stringify(S)),
+ cfg:()=>{try{S.cfg=JSON.parse($('#cf').value)}catch(e){return alert('JSON non valido')}upd()},
+ rs:()=>{const t=prompt('Incolla il backup');if(t)try{S=JSON.parse(t);S.cfg=Object.assign({},DEF,S.cfg);S.log=S.log||[];upd()}catch(e){alert('Backup non valido')}}};
+addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])try{A[b.dataset.a](b.dataset)}catch(x){alert(x.message)}});
+addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.c=='topic'){S.topic=e.target.value.trim();S.sent={};upd()}});
+const sync=()=>lc().then(()=>{R();nsync();pubPlan()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(F)tk();sync()}});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>0);
+R();if(F)tk();sync();
+</script></body></html>
