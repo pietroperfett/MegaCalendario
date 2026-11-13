@@ -2,173 +2,250 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Studio"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.png"><title>Studio</title>
 <style>
-:root{color-scheme:dark;--bg:#000;--c:#1c1c1e;--c2:#2c2c2e;--s:#8e8e93;--a:#8b6cff;--g:#32d74b}
+:root{color-scheme:dark;--c:#1c1c1e;--c2:#2c2c2e;--s:#8e8e93;--a:#8b6cff;--g:#32d74b;--o:#ff9f0a;--r:#ff453a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-body{margin:0;background:var(--bg);color:#fff;font:17px/1.3 -apple-system,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 calc(92px + env(safe-area-inset-bottom))}
-main{max-width:560px;margin:auto;padding:12px 16px}
-h1{font-size:34px;line-height:1.1;margin:12px 0 4px;letter-spacing:-.5px}
-.sub{color:var(--s);font-size:15px;margin:0 0 14px}
-h3{font-size:13px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;margin:22px 4px 8px}
+html,body{height:100%;margin:0;background:#000;overflow:hidden}
+body{color:#fff;font:17px/1.3 -apple-system,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+header{flex:none;padding:calc(env(safe-area-inset-top) + 6px) 20px 4px}
+h1{margin:0;font-size:30px;line-height:38px;letter-spacing:-.4px}
+#v{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:6px 16px 28px}
+#v::-webkit-scrollbar{display:none}
+h3{font-size:13px;font-weight:600;color:var(--s);text-transform:uppercase;letter-spacing:.4px;margin:20px 4px 8px}
 .card{background:var(--c);border-radius:16px;padding:16px;margin:0 0 12px}
-.row{display:flex;align-items:center;gap:12px}.col{flex:1;min-width:0}
-.t{font-weight:600}.m{color:var(--s);font-size:15px}
+.row{display:flex;align-items:center;gap:10px}.col{flex:1;min-width:0}
+.t{font-weight:600}.m{color:var(--s);font-size:15px}.sm{font-size:13px}.ok{color:var(--g)}.warn{color:var(--o)}.bad{color:var(--r)}
 .bar{width:5px;align-self:stretch;min-height:36px;border-radius:3px;flex:none}
-button{-webkit-appearance:none;appearance:none;font:600 16px/1 -apple-system,system-ui,sans-serif;min-height:44px;border:0;border-radius:12px;padding:0 16px;background:var(--c2);color:#fff;cursor:pointer}
-button.p{background:var(--a)}button.ok{background:#32d74b26;color:var(--g)}button.w{width:100%;margin:0 0 12px}
-.btns{display:flex;gap:8px;margin-top:12px}.btns button{flex:1;padding:0 8px}
+button{-webkit-appearance:none;appearance:none;font:600 16px/1 -apple-system,system-ui,sans-serif;min-height:44px;border:0;border-radius:12px;padding:0 14px;background:var(--c2);color:#fff}
+button.p{background:var(--a)}button.ok{background:#32d74b26}button.w{width:100%;margin:0 0 12px}
+.btns{display:flex;gap:8px;margin-top:12px}.btns button{flex:1;padding:0 6px}
 .seg{display:flex;flex-wrap:wrap;background:var(--c2);border-radius:12px;padding:3px;gap:3px}
-.seg button{flex:1 1 40%;min-height:36px;background:none;font-size:15px;padding:0 8px}.seg button.on{background:#636366}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.chips span{background:var(--c);border-radius:20px;padding:6px 12px;font-size:13px;color:var(--s)}
-.prog{height:6px;background:var(--c2);border-radius:3px;margin:0 0 14px;overflow:hidden}.prog i{display:block;height:100%;background:var(--a)}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1c1c1ee8;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:.5px solid #3a3a3c;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;min-height:50px;padding:0;font-size:11px;font-weight:500;color:var(--s)}nav button.on{color:var(--a)}
-nav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-input,textarea{width:100%;font:16px ui-monospace,monospace;background:var(--c2);color:#fff;border:0;border-radius:12px;padding:12px}
-.ring{display:block;margin:8px auto 20px;width:260px;height:260px}pre{white-space:pre-wrap}
-</style></head><body><main id="v"></main><nav id="n"></nav>
+.seg button{flex:1 1 30%;min-height:36px;background:none;font-size:15px;padding:0 6px}.seg button.on{background:#636366}.seg .f1{flex:1 1 0}.seg .h2{flex:1 1 45%}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.chips span{background:var(--c);border-radius:20px;padding:6px 12px;font-size:13px;color:var(--s)}
+.chips .ok{color:var(--g)}.chips .warn{color:var(--o)}.chips .bad{color:var(--r)}
+.prog{height:8px;background:var(--c2);border-radius:4px;overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;background:var(--a)}
+nav{flex:none;display:flex;background:var(--c);border-top:.5px solid #3a3a3c;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;min-height:48px;padding:0;font-size:10.5px;font-weight:500;color:var(--s)}nav button.on{color:var(--a)}
+nav svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+input,textarea{width:100%;font:16px -apple-system,system-ui,sans-serif;background:var(--c2);color:#fff;border:0;border-radius:12px;padding:12px;margin:6px 0}
+input[type=time]{width:auto;margin:0;padding:8px 10px}
+.big{font-size:72px;font-weight:200;text-align:center;font-variant-numeric:tabular-nums;margin:20px 0 4px}
+#ts{position:fixed;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));background:#3a3a3c;border-radius:14px;padding:12px 14px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s}#ts.on{opacity:1}
+pre{white-space:pre-wrap;font-size:12px}
+</style></head><body><div id="app"><header><h1 id="hd"></h1></header><main id="v"></main><nav id="n"></nav></div><div id="ts"></div>
 <script>
-const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0'),NT='https://ntfy.sh/',KEY='studio1';
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0'),NT='https://ntfy.sh/',KEY='studio3';
 const dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 const tm=t=>{const q=t.split(':');return q[0]*60+ +q[1]},hm=m=>pad(m/60|0)+':'+pad(m%60);
 const mk=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return dk(x)};
-const GG=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
-// Configurazione di partenza (modificabile da Impostazioni). win: 0=Dom..6=Sab -> finestre [da,a,leggero?]
-const DEF={max:3,
- courses:[{id:'fis',n:'Fisica',t:4.5,st:'a',col:'#ff9f0a'},{id:'mat',n:'Matematica',t:4.5,st:'a',col:'#0a84ff'},{id:'pro',n:'Programmazione 1',t:4,st:'a',col:'#30d158'},{id:'mii',n:'MII',t:2,st:'p',col:'#bf5af2'}],
- win:{1:[['17:00','21:00']],2:[['16:00','18:00']],3:[['16:00','18:00',1]],4:[['15:30','18:00']],5:[['15:00','19:00']],0:[['15:00','18:00']],6:[]},
- gym:{2:['18:00','20:30'],4:['18:30','20:30']},
- les:{1:'9–14',2:'9–14',3:'11–13 e 14–16',4:'9–13',5:'9–13'},
- exams:[{c:'mii',d:'2027-01-11'},{c:'mat',d:'2027-06-17'},{c:'fis',d:'2027-06-18'}]};
+const hh=ts=>new Date(ts).toLocaleTimeString('it',{hour:'2-digit',minute:'2-digit'});
+const nowM=()=>{const n=new Date();return n.getHours()*60+n.getMinutes()};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const GG=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'],GS=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
+// Valori di partenza (arretrato e orari sono stime: correggili in Studi). dy: m x=libero l=leggero p=pieno
+const DEF={max:3,am:'08:00',night:['23:00','07:30'],gym:['18:30','20:30'],
+ cr:[{id:'fis',n:'Fisica',cfu:12,t:4.5,les:12,h:0,col:'#ff9f0a'},{id:'mat',n:'Matematica',cfu:12,t:4.5,les:12,h:0,col:'#0a84ff'},{id:'pro',n:'Programmazione 1',cfu:9,t:4,les:15,h:0,col:'#30d158'},{id:'mii',n:'MII',cfu:9,t:2,les:0,h:0,col:'#bf5af2'}],
+ dy:{1:{m:'p',a:'16:30',z:'21:00'},2:{m:'p',a:'16:30',z:'21:00'},3:{m:'l',a:'16:00',z:'18:00'},4:{m:'p',a:'15:30',z:'20:00'},5:{m:'p',a:'15:30',z:'19:30'},6:{m:'x',a:'10:00',z:'13:00'},0:{m:'p',a:'15:00',z:'19:00'}},
+ ls:{1:[[540,840]],2:[[540,840]],3:[[660,780],[840,960]],4:[[540,780]],5:[[540,780]]}};
 let S;try{S=JSON.parse(localStorage[KEY])}catch(e){}
-S=S||{done:[],skip:{},off:{},rev:[],sent:{},cal:{t:0,ev:[]},lvl:2,mode:[50,10],topic:'studio-'+Math.random().toString(36).slice(2,12)};
-S.cfg=Object.assign({},DEF,S.cfg);S.log=S.log||[];
-const save=()=>{try{localStorage[KEY]=JSON.stringify(S)}catch(e){}};
-if(S.v!=2){Object.keys(S.sent||{}).forEach(q=>fetch(NT+S.topic+'/'+q,{method:'DELETE'}).catch(()=>0));S.sent={};S.v=2}
-save();
-const log=m=>{S.log.unshift(new Date().toLocaleTimeString('it',{hour:'2-digit',minute:'2-digit'})+' '+m);S.log.length=Math.min(S.log.length,8);save()};
+if(!S){let o={};try{o=JSON.parse(localStorage.studio1)||{}}catch(e){}
+ S={topic:o.topic||'studio-'+Math.random().toString(36).slice(2,12),lvl:2,cal:{t:0,ev:[],n:0},cfg:JSON.parse(JSON.stringify(DEF)),cm:{},back:{},gym:{},off:{},sent:{},rev:o.rev||[],
+  hist:(o.done||[]).map(x=>({d:x.d,s:x.s||'',c:x.c,m:x.m,g:'',v:0,n:'',p:[]})),f:null,w:null,goal:'',fc:'',fk:'',mode:[50,10],hold:0,cnt:{d:'',n:0},pp:0,ph:'',log:[]}}
+S.cfg=Object.assign({},DEF,S.cfg);
+const save=()=>{try{localStorage[KEY]=JSON.stringify(S)}catch(e){}};save();
+const log=m=>{S.log.unshift(hh(Date.now())+' '+m);S.log.length=Math.min(S.log.length,8);save()};
 addEventListener('error',e=>log('JS: '+e.message));
-const C=id=>S.cfg.courses.find(c=>c.id==id)||{n:id,col:'#888',st:'p'};
-const lab=b=>C(b.c).st=='a'?(b.l?'Appunti in bella (leggero)':'Appunti in bella + audio'):(b.l?'Ripasso leggero':'Esercizi + ripasso');
-const ex=id=>S.cfg.exams.some(e=>e.c==id&&new Date(e.d)>Date.now()&&new Date(e.d)-Date.now()<35*864e5);
+const C=id=>S.cfg.cr.find(c=>c.id==id)||{n:id,col:'#888',cfu:0,t:0,les:0,h:0};
+const ago=t=>{if(!t)return'mai';const m=Math.round((Date.now()-t)/6e4);return m<2?'adesso':m<60?m+' min fa':m<1440?Math.round(m/60)+' ore fa':Math.round(m/1440)+' giorni fa'};
+const calSt=()=>{const m=S.cal.t?(Date.now()-S.cal.t)/6e4:1e9;return{t:ago(S.cal.t),c:m<180?'ok':m<720?'warn':'bad'}};
+const streak=()=>{const s=new Set(S.hist.map(x=>x.d));let n=0,d=dk(new Date());if(!s.has(d))d=mk(d,-1);while(s.has(d)){n++;d=mk(d,-1)}return n};
+const quiet=ts=>{const d=new Date(ts),m=d.getHours()*60+d.getMinutes(),n=S.cfg.night;return m>=tm(n[0])||m<tm(n[1])||(S.cfg.ls[d.getDay()]||[]).some(r=>m>=r[0]&&m<r[1])};
+const lab=b=>C(b.c).les>0?(b.l?'Appunti in bella · leggero':'Appunti in bella + audio'):(b.l?'Ripasso leggero':'Esercizi + ripasso');
 
-// Pianificatore: slot da 60' (50 focus + 10 pausa) nelle finestre libere, assegnati ai corsi più "in debito"
+// Pianificatore. Oggi i blocchi vengono "fissati" (cm) così restano visibili anche se scaduti; i blocchi non fatti
+// o spostati finiscono nell'arretrato (back) che ha la precedenza sugli slot dei giorni successivi.
+function roll(T){for(const k of Object.keys(S.cm))if(k<T){S.cm[k].forEach(e=>{if(!e.st){S.back[e.c]=(S.back[e.c]||0)+1;e.st=2;e.x=1}});if(k<mk(T,-14))delete S.cm[k]}}
+const SL=(d,k,cf)=>{
+ const bz=(S.cal.ev||[]).map(e=>[e[0]-d/6e4,e[1]-d/6e4]).filter(e=>e[1]>0&&e[0]<1440);
+ if(S.gym[k])bz.push([tm(S.cfg.gym[0]),tm(S.cfg.gym[1])]);
+ let sg=[[tm(cf.a),tm(cf.z)]];
+ bz.forEach(e=>{sg=sg.flatMap(q=>e[1]<=q[0]||e[0]>=q[1]?[q]:[[q[0],Math.max(q[0],e[0])],[Math.min(q[1],e[1]),q[1]]].filter(r=>r[1]>r[0]))});
+ const o=[];sg.forEach(q=>{for(let a=q[0];q[1]-a>=50;a+=60)o.push({k:k+' '+hm(a),s:hm(a),e:hm(Math.min(a+60,q[1])),l:cf.m=='l'?1:0})});
+ return o.slice(0,S.cfg.max||3)};
 function plan(){
- const now=new Date(),nm=now.getHours()*60+now.getMinutes(),cut=+now-7*864e5,d7={},al={},out=[],mx=S.cfg.max||3;
- S.done.forEach(x=>{if(+new Date(x.d)>=cut)d7[x.c]=(d7[x.c]||0)+x.m/60});
+ const now=new Date(),T=dk(now),nm=nowM(),out=[],al={},d7={};roll(T);
+ S.hist.forEach(x=>{if(Date.now()-new Date(x.d+'T12:00')<7*864e5)d7[x.c]=(d7[x.c]||0)+x.m/60});
+ const pick=(i,u)=>{const sc=c=>c.t*(1+i/7)-(d7[c.id]||0)-(al[c.id]||0)-(u[c.id]?1.2:0)+((al[c.id]||0)<(S.back[c.id]||0)?5:0);
+  const c=S.cfg.cr.reduce((p,q)=>sc(q)>sc(p)?q:p);al[c.id]=(al[c.id]||0)+1;u[c.id]=1;return c.id};
  for(let i=0;i<10;i++){
-  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i),k=dk(d),dw=d.getDay(),b=[],used={};
-  if(!S.off[k]){
-   const bz=S.cal.ev.map(e=>[e[0]-d/6e4,e[1]-d/6e4]).filter(e=>e[1]>0&&e[0]<1440),g=S.cfg.gym[dw];
-   if(g)bz.push([tm(g[0]),tm(g[1])]);
-   (S.cfg.win[dw]||[]).forEach(w=>{
-    let sg=[[tm(w[0]),tm(w[1])]];
-    bz.forEach(e=>{sg=sg.flatMap(q=>e[1]<=q[0]||e[0]>=q[1]?[q]:[[q[0],Math.max(q[0],e[0])],[Math.min(q[1],e[1]),q[1]]].filter(r=>r[1]>r[0]))});
-    sg.forEach(q=>{for(let a=q[0];q[1]-a>=50&&b.length<mx;a+=60){
-     const key=k+' '+hm(a);if(S.skip[key]||(!i&&a<nm-10))continue;
-     const need=c=>c.t*(ex(c.id)?1.5:1)*(1+i/7)-(d7[c.id]||0)-(al[c.id]||0)-(used[c.id]?1.2:0);
-     const c=S.cfg.courses.reduce((p,q)=>need(q)>need(p)?q:p);
-     al[c.id]=(al[c.id]||0)+1;used[c.id]=1;b.push({k:key,s:hm(a),e:hm(Math.min(a+60,q[1])),c:c.id,l:w[2]?1:0})}})})}
-  out.push({k,d,b})}
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i),k=dk(d),cf=S.cfg.dy[d.getDay()]||{m:'x'},u={};
+  const gen=!S.off[k]&&cf.m!='x'?SL(d,k,cf):[];
+  if(!i){
+   const old=S.cm[k]||[],keep=old.filter(e=>e.st||gen.some(g=>g.k==e.k));
+   old.forEach(e=>{if(!keep.includes(e)&&e.s>=hm(nm))S.back[e.c]=(S.back[e.c]||0)+1});
+   keep.forEach(e=>{if(!e.st)al[e.c]=(al[e.c]||0)+1;u[e.c]=1});
+   gen.forEach(g=>{if(!keep.some(e=>e.k==g.k)&&tm(g.s)>=nm-10)keep.push({...g,c:pick(0,u),st:0})});
+   S.cm[k]=keep.sort((a,b)=>a.s<b.s?-1:1);out.push({k,d,b:S.cm[k]})}
+  else out.push({k,d,b:gen.map(g=>({...g,c:pick(i,u),st:0}))})}
  return out}
+const E=k=>(S.cm[k.split(' ')[0]]||[]).find(e=>e.k==k);
 
-function fin(k,s,c,m){const d=(k||dk(new Date())).split(' ')[0];if(k)S.skip[k]=1;S.done.push({d,s,c,m});[1,3,7].forEach(n=>S.rev.push({d:mk(d,n),c}));upd()}
-const cp=t=>navigator.clipboard.writeText(t).then(()=>alert('Copiato'),()=>alert('Copia non riuscita'));
+// Azioni sui blocchi (st: 0 da fare, 1 fatto, 2 spostato, 3 in corso)
+function done(o){const d=dk(new Date()),e=o.k&&E(o.k),c=C(o.c),m=+o.m||0;if(e)e.st=1;
+ S.hist.push({d,s:hm(nowM()),c:o.c,m,g:o.g||'',v:o.v||0,n:o.n||'',p:o.dis||[]});
+ c.h=(c.h||0)+m/60;c.les=Math.max(0,(c.les||0)-(o.l||0));if(m>=40&&S.back[o.c]>0)S.back[o.c]--;
+ [1,3,7].forEach(n=>S.rev.push({d:mk(d,n),c:o.c}))}
+let TT;const toast=m=>{const t=$('#ts');t.textContent=m;t.className='on';clearTimeout(TT);TT=setTimeout(()=>t.className='',4000)};
+function skip(k){const e=E(k);if(!e||e.st)return;e.st=2;S.back[e.c]=(S.back[e.c]||0)+1;upd();moved(e.c)}
+function moved(c){for(const d of plan().slice(1)){const b=d.b.find(x=>x.c==c);if(b)return toast('Spostato: '+C(c).n+' → '+GG[d.d.getDay()]+' '+b.s)}toast('Nessuno slot libero nei prossimi giorni')}
+function dayOff(k,v){let n=0;const L=S.cm[k]||[];
+ if(v){L.forEach(e=>{if(!e.st){e.st=2;e.d=1;n++;S.back[e.c]=(S.back[e.c]||0)+1}});S.off[k]=1}
+ else{delete S.off[k];L.forEach(e=>{if(e.d){e.st=0;delete e.d;S.back[e.c]=Math.max(0,(S.back[e.c]||0)-1)}})}
+ upd();if(v)toast(n?n+(n>1?' blocchi spostati':' blocco spostato')+' ai prossimi giorni':'Giorno segnato come non disponibile')}
 function upd(){save();R();nsync();pubPlan()}
-let tab='o',F=S.f||null,TI,busy=0,again=0,ph='';
 
-// UI: stessi componenti ovunque (titolo, sezioni, card, bottoni 44px, segmenti)
+// UI
+let tab='o',TI,busy=0,again=0,lsy=0;
 const da=o=>Object.keys(o).map(k=>`data-${k}="${o[k]}"`).join(' ');
-const btn=(a,l,o,cl)=>`<button class="${cl||''}" data-a="${a}" ${da(o||{})}>${l}</button>`;
-const H=(t,s)=>`<h1>${t}</h1><p class="sub">${s}</p>`,sec=t=>`<h3>${t}</h3>`;
-const card=b=>`<div class="card"><div class="row"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${lab(b)}</div></div></div><div class="btns">${btn('stF','Inizia',{c:b.c,k:b.k},'p')}${btn('fin','Fatto',{k:b.k,s:b.s,c:b.c},'ok')}${btn('sk','Non posso',{k:b.k})}</div></div>`;
+const btn=(a,l,o,c)=>`<button class="${c||''}" data-a="${a}" ${da(o||{})}>${l}</button>`;
+const sec=t=>`<h3>${t}</h3>`,cd=x=>`<div class="card">${x}</div>`;
+const bar=(p,col)=>`<div class="prog"><i style="width:${Math.round(Math.max(0,Math.min(1,p||0))*100)}%${col?';background:'+col:''}"></i></div>`;
+const stp=(l,a,v,id,c)=>`<div class="row" style="margin-top:12px"><div class="col">${l}</div>${btn(a,'−',{c:id,v:-c})}<div class="t" style="min-width:34px;text-align:center">${v}</div>${btn(a,'+',{c:id,v:c})}</div>`;
+const bc=(b,od)=>cd(`<div class="row"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${od?'Scaduto · ':''}${lab(b)}</div></div></div><div class="btns">${btn('ini',od?'Recupera':'Inizia',{c:b.c,k:b.k},'p')}${btn('fd','Fatto',{c:b.c,k:b.k},'ok')}${btn('sk','Non posso',{k:b.k})}</div>`);
 function vO(){
- const P=plan(),t=P[0],n=new Date(),g={};
- t.b.forEach(b=>g[b.c]=(g[b.c]||0)+1);
- const sm=Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + '),dn=S.done.filter(x=>x.d==t.k),rv=S.rev.map((r,i)=>({d:r.d,c:r.c,i})).filter(r=>r.d<=t.k);
- const nx=S.cfg.exams.filter(e=>new Date(e.d)>n).sort((a,b)=>a.d<b.d?-1:1)[0],ls=S.cfg.les&&S.cfg.les[n.getDay()],tot=dn.length+t.b.length;
- return H(GG[n.getDay()],S.off[t.k]?'Oggi non sei disponibile':sm?'Oggi almeno '+sm:'Oggi sei libero')
- +`<div class="chips">${ls?`<span>Lezioni ${ls}</span>`:''}${nx?`<span>${C(nx.c).n} tra ${Math.ceil((new Date(nx.d)-n)/864e5)} gg</span>`:''}</div>`
- +(tot?`<div class="prog"><i style="width:${Math.round(dn.length/tot*100)}%"></i></div>`:'')
- +t.b.map(card).join('')
- +btn('off',S.off[t.k]?'Torno disponibile':'Oggi non posso',{k:t.k,v:S.off[t.k]?0:1},'w')
- +(rv.length?sec('Ripassi da 15 min')+rv.map(r=>`<div class="card row"><i class="bar" style="background:${C(r.c).col}"></i><div class="col t">${C(r.c).n}</div>${btn('rd','✓',{i:r.i},'ok')}</div>`).join(''):'')
- +(dn.length?sec('Fatto oggi')+`<div class="card">${dn.map(x=>`<div class="m">✓ ${C(x.c).n} · ${x.m} min</div>`).join('')}</div>`:'')}
-function vW(){return H('Settimana','Il piano dei prossimi 7 giorni')+plan().slice(0,7).map(d=>`<div class="card"><div class="row"><div class="col t">${GG[d.d.getDay()]} ${d.d.getDate()}</div>${S.off[d.k]?btn('off','Riattiva',{k:d.k,v:0}):''}</div>${d.b.length?d.b.map(b=>`<div class="row" style="margin-top:10px"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${lab(b)}</div></div></div>`).join(''):`<div class="m" style="margin-top:6px">${S.off[d.k]?'Non disponibile':'Libero'}</div>`}</div>`).join('')}
+ const P=plan(),t=P[0],T=t.k,hn=hm(nowM()),pend=t.b.filter(b=>!b.st),od=pend.filter(b=>b.e<=hn),up=pend.filter(b=>b.e>hn),g={};
+ pend.forEach(b=>g[b.c]=(g[b.c]||0)+1);
+ const sm=Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + '),dn=t.b.filter(b=>b.st==1).length,mv=t.b.filter(b=>b.st==2).length,tot=t.b.filter(b=>b.st!=2).length;
+ const bk=Object.keys(S.back).filter(c=>S.back[c]>0),rv=S.rev.map((r,i)=>({d:r.d,c:r.c,i})).filter(r=>r.d<=T),ca=calSt(),dd=t.b.filter(b=>b.st==1||b.st==2);
+ return `<p class="m" style="margin:0 4px 12px">${GG[t.d.getDay()]} ${t.d.getDate()}/${t.d.getMonth()+1}</p>`
+ +cd(`<div class="t">${S.off[T]?'Oggi non sei disponibile':sm?'Oggi almeno '+sm:'Oggi sei libero'}</div>${bar(tot?dn/tot:0)}<div class="m sm" style="margin-top:8px">${dn}/${tot} blocchi fatti${mv?' · '+mv+' spostati':''}</div>`)
+ +`<div class="chips"><span class="${ca.c}">Calendario · ${ca.t}</span><span>Serie · ${streak()} gg</span></div>`
+ +cd(`<div class="row"><div class="col"><div class="t">Palestra oggi</div><div class="m sm">${S.cfg.gym[0]}–${S.cfg.gym[1]} · libera gli slot</div></div>${btn('gym',S.gym[T]?'Sì':'No',{k:T},S.gym[T]?'p':'')}</div>`)
+ +((od.length||bk.length)?sec('Da recuperare')+od.map(b=>bc(b,1)).join('')+(bk.length?cd(bk.map(c=>`<div class="row" style="margin:6px 0"><i class="bar" style="background:${C(c).col};min-height:28px"></i><div class="col">${C(c).n}<div class="m sm">${S.back[c]} ${S.back[c]>1?'blocchi arretrati':'blocco arretrato'}</div></div>${btn('ini','Recupera',{c,k:''},'ok')}</div>`).join('')):''):'')
+ +(up.length?sec('Prossimi blocchi')+up.map(b=>bc(b)).join(''):'')
+ +btn('off',S.off[T]?'Torno disponibile':'Oggi non posso',{k:T,v:S.off[T]?0:1},'w')
+ +(rv.length?sec('Ripassi da 15 min')+rv.map(r=>cd(`<div class="row"><i class="bar" style="background:${C(r.c).col};min-height:28px"></i><div class="col t">${C(r.c).n}</div>${btn('rd','✓',{i:r.i},'ok')}</div>`)).join(''):'')
+ +(dd.length?sec('Oggi')+cd(dd.map(b=>`<div class="m">${b.st==1?'✓ Fatto':'↪ Spostato'} · ${b.s} ${C(b.c).n}</div>`).join('')):'')}
+function vW(){return `<p class="m" style="margin:0 4px 12px">Il piano si ricalcola da solo quando sposti o salti un blocco.</p>`+plan().slice(0,7).map(d=>cd(`<div class="row"><div class="col t">${GG[d.d.getDay()]} ${d.d.getDate()}</div>${btn('gym',S.gym[d.k]?'Palestra ✓':'Palestra',{k:d.k},S.gym[d.k]?'p':'')}${btn('off',S.off[d.k]?'Riattiva':'Non disp.',{k:d.k,v:S.off[d.k]?0:1})}</div>`+(d.b.length?d.b.map(b=>`<div class="row" style="margin-top:12px"><i class="bar" style="background:${C(b.c).col}"></i><div class="col"><div class="t">${b.s}–${b.e} · ${C(b.c).n}</div><div class="m">${['',' Fatto','Spostato','In corso'][b.st]||lab(b)}</div></div></div>`).join(''):`<div class="m" style="margin-top:8px">${S.off[d.k]?'Non disponibile':'Libero'}</div>`))).join('')}
 function vF(){
- if(F)return H(C(F.c).n,(F.ph?'Pausa':'Focus')+' · '+F.m[0]+'/'+F.m[1])
-  +`<svg class="ring" viewBox="0 0 260 260"><circle cx="130" cy="130" r="110" fill="none" stroke="#2c2c2e" stroke-width="12"/><circle id="rg" cx="130" cy="130" r="110" fill="none" stroke="${F.ph?'#32d74b':'#8b6cff'}" stroke-width="12" stroke-linecap="round" stroke-dasharray="691" stroke-dashoffset="0" transform="rotate(-90 130 130)"/><text id="tt" x="130" y="148" text-anchor="middle" font-size="58" font-weight="300" fill="#fff" font-family="-apple-system,system-ui,sans-serif">--:--</text></svg>`
-  +btn('end','Termina e salva',{},'w p');
- const fc=S.fc||S.cfg.courses[0].id,md=S.mode[0];
- return H('Focus','Un blocco = focus + pausa. Gli avvisi di fine fase arrivano da ntfy anche a schermo spento.')
-  +sec('Materia')+`<div class="card"><div class="seg">${S.cfg.courses.map(c=>btn('fc',c.n,{c:c.id},c.id==fc?'on':'')).join('')}</div></div>`
-  +sec('Durata')+`<div class="card"><div class="seg">${btn('md','50 / 10',{v:50},md==50?'on':'')}${btn('md','25 / 5',{v:25},md==25?'on':'')}</div></div>`
-  +btn('stF','Inizia',{c:fc,k:''},'w p')}
-function vS(){
- return H('Impostazioni','Notifiche, calendario e widget')
- +sec('Notifiche (ntfy)')+`<div class="card"><div class="m">Nell'app ntfy iscriviti a questo topic</div><input data-c="topic" value="${S.topic}" style="margin:8px 0 12px"><div class="seg">${['Spente','Leggero','Medio-pesante','Pesante'].map((x,i)=>btn('lvl',x,{v:i},S.lvl==i?'on':'')).join('')}</div><div class="btns">${btn('tst','Prova ora',{v:0})}${btn('tst','Prova tra 15 s',{v:15})}</div><div class="m" style="margin-top:12px">Programmate: ${Object.keys(S.sent).length}</div></div>`
- +sec('Calendario e widget')+`<div class="card"><div class="m">Calendario aggiornato: ${S.cal.t?new Date(S.cal.t).toLocaleString('it'):'mai'} · ${S.cal.ev.length} impegni</div><div class="btns">${btn('cal','Aggiorna')}${btn('scr','Copia script')}</div><div class="m" style="margin-top:12px">1. In Scriptable: + → incolla → rinomina «Studio» → ▶ (consenti il calendario).<br>2. Home: tieni premuto → + → Scriptable → medio.<br>3. Tocca il widget → Script: Studio.</div></div>`
- +sec('Diagnostica')+`<div class="card m" style="font:13px ui-monospace,monospace">${S.log.join('<br>')||'Nessun errore'}</div>`
- +sec('Configurazione')+`<div class="card"><textarea id="cf" rows="10">${JSON.stringify(S.cfg,null,1)}</textarea><div class="btns">${btn('cfg','Salva',{},'p')}${btn('bak','Backup')}${btn('rs','Ripristina')}</div></div>`}
-const TABS=[['o','Oggi','<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>'],['w','Settimana','<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'],['f','Focus','<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 3h5"/>'],['s','Impostazioni','<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>']];
-function R(){try{$('#v').innerHTML={o:vO,w:vW,f:vF,s:vS}[tab]()}catch(e){$('#v').innerHTML='<pre class="m">'+e.stack+'</pre>'}
- $('#n').innerHTML=TABS.map(x=>`<button class="${x[0]==tab?'on':''}" data-a="go" data-t="${x[0]}"><svg viewBox="0 0 24 24">${x[2]}</svg>${x[1]}</button>`).join('');paint()}
-function paint(){if(!F)return;const r=Math.max(0,F.end-Date.now()),t=$('#tt'),g=$('#rg');if(t)t.textContent=pad(Math.floor(r/6e4))+':'+pad(Math.floor(r/1e3)%60);if(g)g.setAttribute('stroke-dashoffset',691*(1-r/(F.m[F.ph]*6e4)))}
+ const f=S.f,w=S.w;
+ if(f)return cd(`<div class="t">${C(f.c).n}</div><div class="m">${esc(f.g)}</div>`)
+  +`<div class="big" id="tm">--:--</div><div class="m" id="ph" style="text-align:center;margin-bottom:16px"></div>`
+  +cd(`<input id="pk" placeholder="Parcheggia una distrazione">${btn('pk','Parcheggia',{},'w')}${f.dis.length?f.dis.map(x=>`<div class="m">· ${esc(x)}</div>`).join(''):'<div class="m sm">Se ti distrai, scrivila qui e torna al compito.</div>'}`)
+  +btn('stop','Termina',{},'w p');
+ if(w){const c=C(w.c);return cd(`<div class="t">Sessione finita · ${c.n}</div><div class="m">${esc(w.g||'Nessun obiettivo')}</div>`)
+  +sec('Quanto hai effettivamente fatto?')
+  +cd(`<div class="row"><div class="col">Minuti</div><input data-c="wm" type="number" inputmode="numeric" value="${w.m}" style="width:96px;margin:0"></div>`+(c.les>0?stp('Lezioni recuperate · arretrato '+c.les,'wl',w.l,'',1):''))
+  +sec('Concentrazione')+cd(`<div class="seg">${[1,2,3,4,5].map(v=>btn('wv',v,{v},w.v==v?'on f1':'f1')).join('')}</div><textarea data-c="wn" rows="3" placeholder="Note">${esc(w.n)}</textarea>`)
+  +btn('sv','Salva sessione',{},'w p')+btn('ds','Scarta',{},'w')}
+ const fc=S.fc||S.cfg.cr[0].id,hs=S.hist.slice(-8).reverse(),wk=S.hist.filter(x=>Date.now()-new Date(x.d+'T12:00')<7*864e5).reduce((a,x)=>a+x.m,0);
+ return `<p class="m" style="margin:0 4px 12px">Un blocco = focus + pausa. Gli avvisi di fine fase arrivano da ntfy anche a schermo spento.</p>`
+  +sec('Materia')+cd(`<div class="seg">${S.cfg.cr.map(c=>btn('fc',c.n,{c:c.id},c.id==fc?'on h2':'h2')).join('')}</div>`)
+  +sec('Obiettivo (obbligatorio)')+cd(`<input data-c="goal" value="${esc(S.goal)}" placeholder="Cosa chiudi in questa sessione?" style="margin:0">`)
+  +sec('Durata')+cd(`<div class="seg">${btn('md','50 / 10',{v:50},S.mode[0]==50?'on f1':'f1')}${btn('md','25 / 5',{v:25},S.mode[0]==25?'on f1':'f1')}</div>`)
+  +btn('start','Inizia',{},'w p')
+  +sec('Storico · '+(wk/60).toFixed(1)+' h negli ultimi 7 giorni')
+  +cd(hs.length?hs.map(x=>`<div style="margin:8px 0"><div class="t">${x.d.slice(8)}/${x.d.slice(5,7)} · ${C(x.c).n} · ${x.m} min${x.v?' · '+x.v+'/5':''}</div><div class="m sm">${esc(x.g||'—')}${x.n?' · '+esc(x.n):''}${x.p&&x.p.length?' · '+x.p.length+' distrazioni':''}</div></div>`).join(''):'<div class="m">Ancora nessuna sessione.</div>')}
+function vM(){const cr=S.cfg.cr,tc=cr.reduce((a,c)=>a+c.cfu,0),tn=cr.reduce((a,c)=>a+Math.min(c.cfu,c.h/25),0),th=cr.reduce((a,c)=>a+c.h,0);
+ return cd(`<div class="t">CFU maturati ${tn.toFixed(1)} / ${tc}</div>${bar(tn/tc)}<div class="m sm" style="margin-top:8px">${th.toFixed(1)} h studiate · 1 CFU = 25 h di lavoro</div>`)
+ +cr.map(c=>cd(`<div class="row"><i class="bar" style="background:${c.col}"></i><div class="col"><div class="t">${c.n}</div><div class="m">${Math.min(c.cfu,c.h/25).toFixed(1)} / ${c.cfu} CFU · ${c.les>0?'Arretrato: '+c.les+' lezioni':'In pari'}</div></div></div>${bar(c.h/25/c.cfu,c.col)}${stp('Lezioni arretrate','ls',c.les,c.id,1)}${stp('Ore a settimana','tg',c.t,c.id,.5)}`)).join('')
+ +sec('Settimana tipo')+[1,2,3,4,5,6,0].map(d=>{const f=S.cfg.dy[d];return cd(`<div class="row"><div class="t" style="width:40px">${GS[d]}</div><div class="seg col">${[['x','Libero'],['l','Leggero'],['p','Pieno']].map(x=>btn('dm',x[1],{d,v:x[0]},f.m==x[0]?'on f1':'f1')).join('')}</div></div>`+(f.m!='x'?`<div class="row" style="margin-top:12px"><div class="col m">Studio dalle / alle</div><input type="time" data-c="ta" data-d="${d}" value="${f.a}"><input type="time" data-c="tz" data-d="${d}" value="${f.z}"></div>`:''))}).join('')
+ +`<p class="m sm" style="margin:0 4px">L'inizio è l'ora in cui sei a casa col pullman più una pausa. La palestra la segni giorno per giorno in Oggi o Piano.</p>`}
+function vS(){const ca=calSt(),rl=S.hold>Date.now();
+ return sec('Notifiche (ntfy)')+cd(`<div class="m">Nell'app ntfy iscriviti a questo topic</div><input data-c="topic" value="${S.topic}"><div class="seg">${['Spente','Leggero','Medio-pesante'].map((x,i)=>btn('lvl',x,{v:i},S.lvl==i?'on f1':'f1')).join('')}</div>`
+  +`<div class="m sm" style="margin-top:12px">Mattina “Oggi: …”, 10 min prima del blocco, 10 e 20 min dopo se non inizi. Silenzio automatico durante le lezioni e di notte (23:00–07:30).</div><div class="btns">${btn('tst','Prova ora',{v:0})}${btn('tst','Prova tra 15 s',{v:15})}</div>`
+  +`<div class="m sm" style="margin-top:12px">Programmate: ${Object.keys(S.sent).length} · richieste oggi: ${S.cnt.n}/150${rl?' · <span class="warn">in pausa fino alle '+hh(S.hold)+' (limite ntfy)</span>':''}</div>`)
+ +sec('Calendario Apple')+cd(`<div class="t ${ca.c}">Ultimo aggiornamento: ${ca.t}</div><div class="m">${S.cal.n} impegni nei prossimi 14 giorni</div><div class="btns">${btn('cal','Aggiorna')}${btn('scr','Copia script')}</div><div class="m sm" style="margin-top:12px">1. In Scriptable: + → incolla → rinomina «Studio» → ▶ (consenti il calendario).<br>2. Home: tieni premuto → + → Scriptable → medio → tocca il widget → Script: Studio.<br>Si aggiorna quando iOS rinfresca il widget.</div>`)
+ +sec('Report e backup')+cd(`<div class="m">${S.hist.length} sessioni salvate</div><div class="btns">${btn('rep','Report CSV')}${btn('bak','Backup JSON')}${btn('rs','Ripristina')}</div>`)
+ +sec('Diagnostica')+cd(`<div class="m sm">${S.log.map(esc).join('<br>')||'Nessun errore'}</div>`)}
+const TABS=[['o','Oggi','<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>'],['w','Piano','<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'],['f','Focus','<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 3h5"/>'],['m','Studi','<path d="M3 8l9-4 9 4-9 4z"/><path d="M7 10.5V15c0 1.4 2.2 3 5 3s5-1.6 5-3v-4.5"/>'],['s','Altro','<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>']];
+const TT_={o:'Oggi',w:'Piano',f:'Focus',m:'Studi',s:'Impostazioni'},SC={};
+function R(nt){const v=$('#v');if(nt&&nt!=tab){SC[tab]=v.scrollTop;tab=nt}const y=nt?SC[tab]||0:v.scrollTop;
+ try{v.innerHTML={o:vO,w:vW,f:vF,m:vM,s:vS}[tab]()}catch(e){v.innerHTML='<pre>'+esc(e.stack)+'</pre>'}
+ v.scrollTop=y;$('#hd').textContent=TT_[tab];$('#n').innerHTML=TABS.map(x=>`<button class="${x[0]==tab?'on':''}" data-a="tab" data-t="${x[0]}"><svg viewBox="0 0 24 24">${x[2]}</svg>${x[1]}</button>`).join('');paint()}
+function paint(){const f=S.f;if(!f)return;const r=Math.max(0,f.end-Date.now()),t=$('#tm'),p=$('#ph');if(t)t.textContent=pad(Math.floor(r/6e4))+':'+pad(Math.floor(r/1e3)%60);if(p)p.textContent=(f.ph?'Pausa':'Focus')+' · '+f.m[0]+'/'+f.m[1]}
 
-// Focus timer: le fasi successive sono programmate su ntfy (suonano anche con l'app chiusa)
-async function stF(c,k){const m=S.mode;(F&&F.ids||[]).forEach(dele);F={c,k,m,ph:0,end:Date.now()+m[0]*6e4,acc:0,ids:[]};S.f=F;save();tab='f';R();tk();
- const me=F;for(let n=0;n<3;n++){const t=me.end+n*(m[0]+m[1])*6e4;
-  for(const x of [['Pausa','Stacca '+m[1]+' minuti.',t],['Si riparte',C(c).n+': altro blocco da '+m[0]+' minuti.',t+m[1]*6e4]]){if(F!==me)return;const id=await pub(x[0],x[1],x[2],4);if(id){if(F===me)me.ids.push(id);else dele(id)}}}S.f=F;save()}
-function tk(){clearInterval(TI);if(!F)return;TI=setInterval(()=>{if(!F)return clearInterval(TI);
- if(F.end<=Date.now()){bp();if(F.ph){F.ph=0;F.end=Date.now()+F.m[0]*6e4}else{F.acc+=F.m[0];F.ph=1;F.end=Date.now()+F.m[1]*6e4}S.f=F;save();R()}paint()},1000);
+// Focus
+async function start(){if(!S.goal.trim())return alert('Scrivi prima l’obiettivo della sessione');
+ const m=S.mode,c=S.fc||S.cfg.cr[0].id,e=S.fk&&E(S.fk);if(e)e.st=3;
+ const f=S.f={c,k:S.fk,g:S.goal.trim(),m,ph:0,end:Date.now()+m[0]*6e4,acc:0,dis:[],ids:[]};S.goal='';S.fk='';save();R();tk();nsync();
+ for(let n=0;n<2;n++){const t=f.end+n*(m[0]+m[1])*6e4;for(const x of [['Pausa','Stacca '+m[1]+' minuti.',t],['Si riparte',C(c).n+': altro blocco da '+m[0]+' minuti.',t+m[1]*6e4]]){if(S.f!==f)return;const r=await pub(x[0],x[1],x[2],4);if(!r)return;if(S.f===f)f.ids.push(r.id||'x');else net('DELETE','/'+r.id);await sleep(500)}}save()}
+function tk(){clearInterval(TI);if(!S.f)return;TI=setInterval(()=>{const f=S.f;if(!f)return clearInterval(TI);
+ if(f.end<=Date.now()){bp();if(f.ph){f.ph=0;f.end=Date.now()+f.m[0]*6e4}else{f.acc+=f.m[0];f.ph=1;f.end=Date.now()+f.m[1]*6e4}save()}paint()},1000);
  if(navigator.wakeLock)navigator.wakeLock.request('screen').catch(()=>0)}
-function endF(){clearInterval(TI);const r=F.end-Date.now(),m=F.acc+(F.ph?0:Math.max(0,F.m[0]-Math.ceil(r/6e4))),c=F.c,k=F.k,ids=(F.ids||[]).slice();F=null;S.f=null;ids.forEach(dele);tab='o';m>0?fin(k,'',c,m):upd()}
+function stop(){const f=S.f;clearInterval(TI);const el=f.ph?0:Math.max(0,f.m[0]-Math.ceil((f.end-Date.now())/6e4));
+ S.w={c:f.c,k:f.k,g:f.g,m:Math.max(1,f.acc+el),dis:f.dis,v:3,l:0,n:''};f.ids.forEach(id=>net('DELETE','/'+id));S.f=null;save();R()}
 function bp(){try{const a=new AudioContext(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=880;o.start();o.stop(a.currentTime+.4)}catch(e){}}
 
-// ntfy: programma gli avvisi (max 3 giorni avanti) e li riallinea al piano; annulla quelli superati
-async function pub(t,m,ts,p){try{const q={title:t,priority:p||4,tags:'books'};if(ts)q.delay=Math.floor(ts/1e3);
- const r=await fetch(NT+S.topic+'?'+new URLSearchParams(q),{method:'POST',body:m});
- if(!r.ok){log('ntfy errore '+r.status);return 0}return(await r.json()).id||'x'}catch(e){log('ntfy: '+e.message);return 0}}
-const dele=id=>fetch(NT+S.topic+'/'+id,{method:'DELETE'}).catch(()=>0);
-async function tst(s){const id=await pub('Prova','Se leggi questo, ntfy funziona.',s?Date.now()+s*1e3:0,4);alert(id?(s?'Programmata tra '+s+' secondi':'Inviata ora'):'Non riuscita: '+S.log[0]);R()}
-const hs=w=>w.t+w.m+w.ts;
-async function nsync(){if(busy){again=1;return}busy=1;try{
- const now=Date.now(),W=new Map(),O=[[],[-10],[-10,0,10,25],[-10,0,5,10,15,20,30]][S.lvl||0];
- if(S.lvl)plan().slice(0,4).forEach(d=>{const g={};
-  d.b.forEach(b=>{g[b.c]=(g[b.c]||0)+1;const st=+new Date(d.k+'T'+b.s);
-   O.forEach(o=>W.set('b'+b.k.replace(/\W/g,'')+(o<0?'m':'p')+Math.abs(o),{ts:st+o*6e4,t:(o<0?'Tra 10 min':o?'Sei partito?':'Ora')+' · studio '+b.s,m:o<0?'Preparati: tra 10 minuti inizia il blocco.':o?'Parti adesso, anche solo 10 minuti.':'Apri Studio e premi Inizia.',p:o>=15?5:4}))});
-  W.set('am'+d.k.replace(/-/g,''),{ts:+d.d+8*36e5,t:GG[d.d.getDay()]+': studio',m:Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + ')||'Giorno libero',p:3})});
- for(const q of Object.keys(S.sent)){const o=S.sent[q];if(!W.has(q)||o.h!=hs(W.get(q))){if(o.ts>now+5e3)await dele(o.id);delete S.sent[q]}}
- for(const [q,w] of W){if(S.sent[q]||w.ts-now<15e3||w.ts-now>71*36e5)continue;const id=await pub(w.t,w.m,w.ts,w.p);if(id)S.sent[q]={id,ts:w.ts,h:hs(w)}}
- save()}catch(e){log('sync: '+e.message)}busy=0;if(again){again=0;nsync()}}
+// ntfy: poche richieste, distanziate; su 429 si ferma e riprova dopo il tempo indicato
+async function net(m,u,b){const now=Date.now();if(S.hold>now)return 0;
+ const t=dk(new Date());if(S.cnt.d!=t)S.cnt={d:t,n:0};if(S.cnt.n>=150){log('limite locale: 150 richieste oggi');return 0}S.cnt.n++;
+ try{const r=await fetch(NT+S.topic+u,{method:m,body:b});
+  if(r.status==429){const ra=+(r.headers&&r.headers.get('Retry-After'))||600;S.hold=now+ra*1e3;let e='';try{e=(await r.json()).error||''}catch(x){}log('ntfy 429 '+e+' · riprovo alle '+hh(S.hold));save();setTimeout(nsync,ra*1e3+2e3);return 0}
+  if(!r.ok){log('ntfy errore '+r.status);return 0}
+  try{return await r.json()}catch(x){return{}}}catch(e){log('ntfy: '+e.message);return 0}}
+const pub=(t,m,ts,p)=>{const q={title:t,priority:p||4,tags:'books'};if(ts)q.delay=Math.floor(ts/1e3);return net('POST','?'+new URLSearchParams(q),m)};
+async function tst(s){const r=await pub('Prova','Se leggi questo, ntfy funziona.',s?Date.now()+s*1e3:0,4);toast(r?(s?'Programmata tra '+s+' secondi':'Inviata ora'):'Non riuscita: '+(S.log[0]||''));R()}
+const hsh=w=>w.t+w.m+w.ts;
+async function nsync(){if(busy){again=1;return}busy=1;
+ try{if(S.hold>Date.now())return;
+  const now=Date.now(),W=new Map(),hz=now+36*36e5;
+  if(S.lvl)plan().slice(0,2).forEach((d,i)=>{const L=d.b.filter(b=>!b.st),g={};L.forEach(b=>g[b.c]=(g[b.c]||0)+1);
+   const sm=Object.keys(g).map(c=>g[c]+' h '+C(c).n).join(' + '),bk=Object.keys(S.back).filter(c=>S.back[c]>0).map(c=>S.back[c]+' '+C(c).n);
+   if(sm)W.set('am'+d.k,{ts:+d.d+tm(S.cfg.am)*6e4,t:'Oggi: '+sm,m:bk.length?'Arretrato: '+bk.join(', '):'Apri Studio per il piano.',p:3});
+   L.forEach(b=>{const st=+new Date(d.k+'T'+b.s),nm=i?'studio '+b.s:b.s+' '+C(b.c).n;
+    W.set('b'+b.k+'-10',{ts:st-6e5,t:'Tra 10 min: '+nm,m:'Preparati e poi premi Inizia in Studio.',p:4});
+    if(S.lvl>1){W.set('b'+b.k+'+10',{ts:st+6e5,t:'Non hai iniziato · '+nm,m:'Parti adesso, anche solo 10 minuti.',p:4});
+     W.set('b'+b.k+'+20',{ts:st+12e5,t:'Ultimo richiamo · '+nm,m:'Se non puoi, premi “Non posso” in Studio e lo sposto io.',p:5})}})});
+  for(const q of [...W.keys()]){const w=W.get(q);if(quiet(w.ts)||w.ts<now+15e3||w.ts>hz)W.delete(q)}
+  let n=0;
+  for(const q of Object.keys(S.sent)){const o=S.sent[q],w=W.get(q);if(!w||o.h!=hsh(w)){if(o.ts>now+5e3){if(n++>=10)break;await net('DELETE','/'+o.id);await sleep(500)}delete S.sent[q]}}
+  for(const [q,w] of W){if(S.sent[q])continue;if(n++>=24)break;const r=await pub(w.t,w.m,w.ts,w.p);if(!r)break;S.sent[q]={id:r.id||'x',ts:w.ts,h:hsh(w)};await sleep(600)}
+  save()}
+ catch(e){log('sync: '+e.message)}finally{busy=0;if(again){again=0;setTimeout(nsync,4000)}}}
 
 // Calendario Apple -> (Scriptable) -> ntfy -> app. Piano -> ntfy -> widget.
-async function lc(){try{const L=(await(await fetch(NT+S.topic+'-cal/json?poll=1&since=12h')).text()).trim().split('\n').filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x.event=='message');
- if(L.length){const m=L[L.length-1];S.cal={t:m.time*1e3,ev:JSON.parse(m.message).ev};save()}}catch(e){log('calendario: '+e.message)}}
-async function pubPlan(){const j=JSON.stringify({p:plan().slice(0,7).map(d=>[d.k,d.b.map(b=>[b.s,b.e,C(b.c).n,C(b.c).col])])});if(j==ph)return;ph=j;try{const r=await fetch(NT+S.topic+'-plan',{method:'POST',body:j});if(!r.ok)log('piano errore '+r.status)}catch(e){log('piano: '+e.message)}}
+async function lc(){try{const r=await fetch(NT+S.topic+'-cal/json?poll=1&since=12h');if(!r.ok){log('calendario '+r.status);return}
+ const L=(await r.text()).trim().split('\n').filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x.event=='message');
+ if(L.length){const m=L[L.length-1],j=JSON.parse(m.message);S.cal={t:m.time*1e3,ev:j.ev||[],n:(j.ev||[]).length};save()}}catch(e){log('calendario: '+e.message)}}
+async function pubPlan(){if(Date.now()-S.pp<3e5)return;const j=JSON.stringify({p:plan().slice(0,7).map(d=>[d.k,d.b.filter(b=>!b.st).map(b=>[b.s,b.e,C(b.c).n,C(b.c).col])])});if(j==S.ph)return;if(await net('POST','-plan',j)){S.ph=j;S.pp=Date.now();save()}}
 const wsc=()=>`// Studio · widget + sync calendario
 const B="${NT}${S.topic}",fm=FileManager.local(),D=fm.documentsDirectory(),f=fm.joinPath(D,"studio.json"),g=fm.joinPath(D,"studio-cal.txt"),st=[];
 try{const cs=await Calendar.forEvents(),a=new Date,e=(await CalendarEvent.between(a,new Date(+a+14*864e5),cs)).filter(x=>!x.isAllDay).slice(0,150).map(x=>[Math.floor(x.startDate/6e4),Math.floor(x.endDate/6e4)]),j=JSON.stringify({ev:e}),o=fm.fileExists(g)?fm.readString(g):"|",i=o.indexOf("|");
-if(o.slice(i+1)!=j||Date.now()-+o.slice(0,i)>216e5){const r=new Request(B+"-cal");r.method="POST";r.body=j;await r.loadString();fm.writeString(g,Date.now()+"|"+j);st.push("calendario inviato ("+e.length+")")}else st.push("calendario ok ("+e.length+")")}catch(x){st.push("calendario: "+x.message)}
+if(o.slice(i+1)!=j||Date.now()-+o.slice(0,i)>18e5){const r=new Request(B+"-cal");r.method="POST";r.body=j;await r.loadString();const c=r.response.statusCode;if(c==200){fm.writeString(g,Date.now()+"|"+j);st.push("calendario inviato ("+e.length+")")}else st.push("calendario errore "+c)}else st.push("calendario ok ("+e.length+")")}catch(x){st.push("calendario: "+x.message)}
 let P=[];try{const L=(await new Request(B+"-plan/json?poll=1&since=12h").loadString()).trim().split("\\n").filter(Boolean).map(x=>JSON.parse(x)).filter(x=>x.event=="message");P=JSON.parse(L.pop().message).p;fm.writeString(f,JSON.stringify(P));st.push("piano ok")}catch(x){try{P=JSON.parse(fm.readString(f));st.push("piano salvato")}catch(y){st.push("piano: apri l'app Studio")}}
 const n=new Date,K=n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"),d=(P.find(x=>x[0]==K)||[K,[]])[1];
 const w=new ListWidget;w.backgroundColor=new Color("#1c1c1e");w.refreshAfterDate=new Date(Date.now()+9e5);
 const h=w.addText("Studio oggi");h.font=Font.boldSystemFont(15);h.textColor=Color.white();w.addSpacer(6);
 if(!d.length){const t=w.addText("Libero");t.font=Font.systemFont(13);t.textColor=Color.gray()}
 d.slice(0,4).forEach(b=>{const t=w.addText(b[0]+" "+b[2]);t.font=Font.systemFont(13);t.textColor=new Color(b[3])});
-w.addSpacer();const z=w.addText(st.join(" · "));z.font=Font.systemFont(9);z.textColor=Color.gray();
+w.addSpacer();const z=w.addText(st.join(" · ")+" · ore "+n.toTimeString().slice(0,5));z.font=Font.systemFont(9);z.textColor=Color.gray();
 config.runsInWidget?Script.setWidget(w):w.presentMedium();Script.complete()`;
 
-// Eventi: un solo ascoltatore per tutti i bottoni (niente handler inline)
-const A={go:d=>{tab=d.t;R()},stF:d=>stF(d.c,d.k),fin:d=>fin(d.k,d.s,d.c,60),sk:d=>{S.skip[d.k]=1;upd()},
- off:d=>{d.v=='1'?S.off[d.k]=1:delete S.off[d.k];upd()},rd:d=>{S.rev.splice(+d.i,1);upd()},
- fc:d=>{S.fc=d.c;R()},md:d=>{S.mode=+d.v==25?[25,5]:[50,10];save();R()},lvl:d=>{S.lvl=+d.v;upd()},tst:d=>tst(+d.v),
- cal:()=>lc().then(R),scr:()=>cp(wsc()),end:()=>endF(),bak:()=>cp(JSON.stringify(S)),
- cfg:()=>{try{S.cfg=JSON.parse($('#cf').value)}catch(e){return alert('JSON non valido')}upd()},
- rs:()=>{const t=prompt('Incolla il backup');if(t)try{S=JSON.parse(t);S.cfg=Object.assign({},DEF,S.cfg);S.log=S.log||[];upd()}catch(e){alert('Backup non valido')}}};
+// Report e backup (condivisione file: "Salva su File")
+const rep=()=>'data,ora,materia,minuti,voto,obiettivo,note,distrazioni\n'+S.hist.map(x=>[x.d,x.s,C(x.c).n,x.m,x.v||'',x.g,x.n,(x.p||[]).join(' | ')].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n')+'\n';
+async function dl(n,t,ty){const f=new File([t],n,{type:ty});try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e.name=='AbortError')return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=n;document.body.appendChild(a);a.click();a.remove();toast('Scaricato')}
+const cp=t=>navigator.clipboard.writeText(t).then(()=>toast('Copiato'),()=>alert('Copia non riuscita'));
+
+// Eventi: un solo ascoltatore per tutti i bottoni
+const A={tab:d=>R(d.t),ini:d=>{S.fc=d.c;S.fk=d.k;R('f')},fd:d=>{S.w={c:d.c,k:d.k,g:'',m:60,dis:[],v:3,l:0,n:''};R('f')},sk:d=>skip(d.k),off:d=>dayOff(d.k,+d.v),
+ gym:d=>{S.gym[d.k]?delete S.gym[d.k]:S.gym[d.k]=1;upd()},rd:d=>{S.rev.splice(+d.i,1);upd()},
+ fc:d=>{S.fc=d.c;R()},md:d=>{S.mode=+d.v==25?[25,5]:[50,10];save();R()},start:()=>start(),stop:()=>stop(),
+ pk:()=>{const i=$('#pk');if(i&&i.value.trim()){S.f.dis.push(i.value.trim());save();R()}},
+ wl:d=>{S.w.l=Math.max(0,S.w.l+ +d.v);R()},wv:d=>{S.w.v=+d.v;R()},sv:()=>{done(S.w);S.w=null;upd();toast('Sessione salvata')},
+ ds:()=>{const e=S.w.k&&E(S.w.k);if(e&&e.st==3)e.st=0;S.w=null;upd()},
+ ls:d=>{const c=C(d.c);c.les=Math.max(0,c.les+ +d.v);upd()},tg:d=>{const c=C(d.c);c.t=Math.max(0,Math.round((c.t+ +d.v)*2)/2);upd()},dm:d=>{S.cfg.dy[d.d].m=d.v;upd()},
+ lvl:d=>{S.lvl=+d.v;upd()},tst:d=>tst(+d.v),cal:()=>lc().then(()=>{R();toast('Calendario: '+calSt().t)}),scr:()=>cp(wsc()),
+ rep:()=>dl('report-studio.csv',rep(),'text/plain'),bak:()=>dl('backup-studio.json',JSON.stringify(S),'text/plain'),
+ rs:()=>{const t=prompt('Incolla il backup');if(t)try{S=JSON.parse(t);S.cfg=Object.assign({},DEF,S.cfg);upd()}catch(e){alert('Backup non valido')}}};
 addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])try{A[b.dataset.a](b.dataset)}catch(x){alert(x.message)}});
-addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.c=='topic'){S.topic=e.target.value.trim();S.sent={};upd()}});
-const sync=()=>lc().then(()=>{R();nsync();pubPlan()});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(F)tk();sync()}});
+addEventListener('input',e=>{const c=e.target.dataset&&e.target.dataset.c;if(c=='goal')S.goal=e.target.value;if(c=='wm')S.w.m=+e.target.value||0;if(c=='wn')S.w.n=e.target.value});
+addEventListener('change',e=>{const t=e.target,c=t.dataset&&t.dataset.c;if(c=='topic'){S.topic=t.value.trim();S.sent={};upd()}if(c=='ta'||c=='tz'){S.cfg.dy[t.dataset.d][c=='ta'?'a':'z']=t.value;upd()}});
+addEventListener('focusout',()=>setTimeout(()=>scrollTo(0,0),60));
+async function sync(f){if(!f&&Date.now()-lsy<6e4)return;lsy=Date.now();await lc();if(!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))R();nsync();pubPlan()}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(S.f)tk();sync()}});
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>0);
-R();if(F)tk();sync();
+R();if(S.f)tk();sync(1);
 </script></body></html>
